@@ -6,32 +6,37 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
- * Created by shrey on 2017-11-05.
+ * Created by shrey on 2017-11-05. Modified by Kunal on 2018-10-15
  */
 
 public class DriveMethods extends HardwarePushBot{
 
-        public static void driveRight(double speed){
-            rightFrontDrive.setPower(speed);
-            rightBackDrive.setPower(speed);
-        }
+    public static void driveRight(double speed){
+        rightMiddleDrive.setPower(speed);
+    }
 
-        public static void driveLeft(double speed){
-            leftFrontDrive.setPower(speed);
-            leftBackDrive.setPower(speed);
-        }
+    public static void driveLeft(double speed){
+        leftMiddleDrive.setPower(speed);
+    }
+    public static void armMotors(double speed) {
+        middleArm.setPower(speed);
+        leftArmLift.setPower(speed);
+    }
 
     /*
      * This method is used to stop the drive motors in order for the robot to stop when in between
      * the two thresholds. It's important to do this so the robot will stop, safely
      */
-        public static void stopRightMotors() { //always zero
-            rightFrontDrive.setPower(0);
-            rightBackDrive.setPower(0);
-        }
+    public static void stopRightMotor() { //always zero
+        rightMiddleDrive.setPower(0);
+    }
 
-        public static void stopLeftMotors(){
-            leftFrontDrive.setPower(0);
-            leftBackDrive.setPower(0);
-        }
+    public static void stopLeftMotor() {
+        leftMiddleDrive.setPower(0);
+
+    }
+     public static void stopArmMotors(){
+        middleArm.setPower(0);
+        leftArmLift.setPower(0);
+    }
 }

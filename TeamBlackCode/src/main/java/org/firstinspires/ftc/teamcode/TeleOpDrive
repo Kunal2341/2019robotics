@@ -2,9 +2,23 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
 @TeleOp(name = "Tel", group = "Sensor")
-public class TeleOpDrive extends LinearOpMode{
+public class TeleOpDrive {
+/* As of Oct 15 the controller button are
+ Right joystick
+   right drive train
+Left joystick
+   Left drive train
+Right trigger (RT)
+   Arm move up
+Left trigger (LT)
+   Arm move down
+Right button (RB)
+   Entire am lifted up (with string)
+Left Button (LB)
+   Entire arm come back down (with string)
+ */
+
 
     HardwarePushBot robot = new HardwarePushBot();
 
@@ -29,17 +43,21 @@ public class TeleOpDrive extends LinearOpMode{
             // Drive variables
             double rightPower = -gamepad1.right_stick_y * 0.8;
             double leftPower = -gamepad1.left_stick_y * 0.8;
+            double rightTrigger = -gamepad1.right_trigger_y * 0.8;
+            double leftTrigger = -gamepad1.left_trigger_y
             double reverse_Thres = -0.3;
             double forward_Thres = 0.3;
             double drive_Speed = 0.7;
             double turn_Speed = 0.5;
+            double arm_Speed = 0.5;
 
 
             // Send calculated power to wheels
             // Drive system
+            // ONLY WHEELS
             if (rightPower < forward_Thres && rightPower > reverse_Thres && leftPower < forward_Thres && leftPower > reverse_Thres) {
-                DriveMethods.stopRightMotors();
-                DriveMethods.stopLeftMotors();
+                DriveMethods.stopRightMotor();
+                DriveMethods.stopLeftMotor();
             } else if (rightPower != 0.0 && leftPower != 0.0) {
                 DriveMethods.driveRight(rightPower * drive_Speed);
                 DriveMethods.driveLeft(leftPower * drive_Speed);
@@ -54,10 +72,30 @@ public class TeleOpDrive extends LinearOpMode{
                 DriveMethods.driveLeft(leftPower * turn_Speed);
                 DriveMethods.driveRight(rightPower * turn_Speed);
             }
+            // Send calculated power to arm
+            // Arm system
+            // ONLY ARM
+            // NOT DONE NEED HELP
+            if (rightTrigger < forward_Thres && rightTrigger > reverse_Thres && leftTrigger < forward_Thres && leftTrigger > reverse_Thres) {
+                DriveMethods.stopArmMotors();
+            } else if (rightTrigger != 0.0 && leftTrigger != 0.0) {
+                DriveMethods.armMotors(rightPower * arm_Speed);
+            } else if (rightTrigger != 0.0 && leftTrigger == 0.0) {
+                DriveMethods.driveRight(rightPower * drive_Speed);
+            } else if (rightTrigger == 0.0 && leftTrigger != 0.0) {
+                DriveMethods.driveLeft(leftPower * drive_Speed);
+            } else if (rightTrigger < reverse_Thres && leftTrigger > forward_Thres) {
+                DriveMethods.driveLeft(leftPower * turn_Speed);
+                DriveMethods.driveRight(rightPower * turn_Speed);
+            } else if (rightTrigger > forward_Thres && leftTrigger < reverse_Thres) {
+                DriveMethods.driveLeft(leftPower * turn_Speed);
+                DriveMethods.driveRight(rightPower * turn_Speed);
+            }
 
         }
 
 
 
     }
+
 }
