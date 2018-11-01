@@ -1,17 +1,22 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-/**
- * Created by shrey on 2018-09-12.
- */
+
 public class HardwarePushBot {
     /* Public OpMode members. */
     public static DcMotor  leftFrontDrive   = null;
     public static DcMotor  rightFrontDrive  = null;
     public static DcMotor  leftBackDrive    = null;
     public static DcMotor  rightBackDrive   = null;
+
+    public static DcMotor  lift = null;
+    public static DcMotor  grip = null;
+
+    public static DcMotor  intake = null;
+
     //public static ColorSensor colorSense    = null;
     //public static Blinker blink = null;
 
@@ -30,24 +35,36 @@ public class HardwarePushBot {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftFrontDrive  = hwMap.get(DcMotor.class, "left_front_drive");
+        leftFrontDrive  = hwMap.get(DcMotor.class, "lfd");
+        rightFrontDrive = hwMap.get(DcMotor.class, "rfd");
+        leftBackDrive   = hwMap.get(DcMotor.class, "lbd");
+        rightBackDrive  = hwMap.get(DcMotor.class, "rbd");
 
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        leftFrontDrive.setPower(0);
+        lift = hwMap.get(DcMotor.class, "lift");
+        grip = hwMap.get(DcMotor.class, "grip");
 
-        rightFrontDrive = hwMap.get(DcMotor.class, "right_front_drive");
-        leftBackDrive   = hwMap.get(DcMotor.class, "left_back_drive");
-        rightBackDrive  = hwMap.get(DcMotor.class, "right_back_drive");
+        intake = hwMap.get(DcMotor.class, "intake");
 
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+
+        lift.setDirection(DcMotor.Direction.REVERSE);
+        grip.setDirection(DcMotor.Direction.FORWARD);
+
+        intake.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
         leftFrontDrive.setPower(0);
         rightFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
         rightBackDrive.setPower(0);
+
+        lift.setPower(0);
+        grip.setPower(0);
+
+        intake.setPower(0);
         //leftArm.setPower(0);
 
         // Set all motors to run without encoders.
@@ -57,9 +74,13 @@ public class HardwarePushBot {
         leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        grip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Color Sensor initialization
         //colorSense = hwMap.get(ColorSensor.class, "color_sense");
         //blink = hwMap.get(Blinker.class, "ledController");
     }
- }
-
+}
