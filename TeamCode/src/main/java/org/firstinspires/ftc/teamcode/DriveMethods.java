@@ -12,7 +12,7 @@ public class DriveMethods extends HardwarePushBot{
         rightFrontDrive.setPower(speed);
         rightBackDrive.setPower(speed);
     }
-
+//:)
     public static void driveLeft(double speed){
         leftFrontDrive.setPower(speed);
         leftBackDrive.setPower(speed);
@@ -56,5 +56,11 @@ public class DriveMethods extends HardwarePushBot{
 
     public static void stopIntake(){
         intake.setPower(0);
+    }
+    public static void stopLift(){
+        lift.setPower(0);
+    }
+    public static void stopGrip(){
+        grip.setPower(0);
     }
 }
