@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Concept: TeleOp", group = "Concept")
 public class TelOp extends LinearOpMode{
 
     org.firstinspires.ftc.teamcode.HardwarePushBot robot = new org.firstinspires.ftc.teamcode.HardwarePushBot();
