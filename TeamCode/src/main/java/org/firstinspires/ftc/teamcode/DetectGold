@@ -2,14 +2,30 @@ package org.firstinspires.ftc.robotcontroller.external.samples;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import java.util.List;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.robotcore.external.
+//import org.firstinspires.ftc.robotcore.external
+
+/*fixing errors:
+- used alt enter
+- renamed teleop or autonomous class
+- add the @autonomous to get it to display on the phone
+- use the suggestions that pop up instead of the old code
+- make sure you have all the right imports
+- switch the device you're using
+- re-download android studio
+- DISABLE instant run: try on the eclipse computer
+- reinstall the ftc project on git hub (look for constant updates)
+- make sure the package name matches the file name under java exactly (org.firstinspires.ftc.robot.controller etc)
+that name should be the same for the package name and the file name under java that's usually gray
+*/
 
 /**
  * This 2018-2019 OpMode illustrates the basics of using the TensorFlow Object Detection API to
@@ -21,13 +37,15 @@ import org.firstinspires.ftc.robotcore.external.
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
- @TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
 //@Disabled
+@Autonomous(name = "DetectGold", group = "Concept")
+
 
 public class DetectGold extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
     private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
+    public static String goldPosition;
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -65,6 +83,7 @@ public class DetectGold extends LinearOpMode {
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
         initVuforia();
+
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
             initTfod();
@@ -106,10 +125,13 @@ public class DetectGold extends LinearOpMode {
                             if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
                                 if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                                     telemetry.addData("Gold Mineral Position", "Left");
+                                    goldPosition = "left";
                                 } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
                                     telemetry.addData("Gold Mineral Position", "Right");
+                                    goldPosition = "right";
                                 } else {
                                     telemetry.addData("Gold Mineral Position", "Center");
+                                    goldPosition = "center";
                                 }
                             }
                         }
@@ -152,4 +174,86 @@ public class DetectGold extends LinearOpMode {
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
+
+
+    org.firstinspires.ftc.teamcode.HardwarePushBot robot = new org.firstinspires.ftc.teamcode.HardwarePushBot();
+    /* NOTES:
+    - try taking out the initialization and seeing if that allows it to continue on with the program after it has identified
+    where the gold mineral is.
+    - have the robot move forward so that it gets a better view of the minerals before it performs sampling
+    - create default setting that makes it drive straight forward after 10 seconds if it has not determined the position of the gold mineral
+    - what is a recursive call?
+    - try keeping the code so that TFOD is in gold detection class and the actual auton pogram is in one of the other 2 auton programs
+    - you dont really need 2 auton programs becuase they're both driving to the relative same place. Though you might have to add different
+    code for the deploying of the marker on the depot
+     */
+    private ElapsedTime runtime = new ElapsedTime();
+
+    // static final double     FORWARD_SPEED = 0.6; //not sure if we'll need these
+    // static final double     TURN_SPEED    = 0.5;
+
+
+    public void driveMethod(double rightSpeed, double leftSpeed, double secs) {
+        // The motors are being set to a speed given within the parameters
+        robot.rightFrontDrive.setPower(rightSpeed);
+        robot.rightBackDrive.setPower(rightSpeed);
+        robot.leftFrontDrive.setPower(leftSpeed);
+        robot.leftBackDrive.setPower(leftSpeed);
+
+        // Resets the runtime to 0 so that when calculating speed, the previous time is not impacting the amount of time a call should
+        // run for (double sec). If you are still confused about this ask Shreya.
+        runtime.reset();
+
+        // Runs the action only if the OpMode is still running and active and if the reset runtime is less than the variable, double sec.
+        while (opModeIsActive() && (runtime.seconds() < secs)) {
+            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+
+        //  @Override
+        //   public void runOpMode () {
+
+        // Initializes the motors declared in hardwareMap or HardwareMap class.
+        robot.init(hardwareMap);
+
+        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Status", "Ready to run");    //
+        telemetry.update();
+
+
+        // This method is used for setting the motors to a specified speed and for a set amount of seconds
+
+
+        waitForStart();
+
+
+        if (goldPosition == "left") {
+            driveMethod(0.5, 0, 2.0);     //turn robot to the right
+            driveMethod(0.5, 0.5, 3.0); //drive robot straight (enough to clear the center mineral so that it can turn and drive without hitting the center mineral)
+            driveMethod(0, 0.5, 2.0);   //turn robot left
+            driveMethod(0.5, 0.5, 3.0); //drive robot straight into crater
+
+        } else if (goldPosition == "right") { // if I try to use .equals then I get an error
+            driveMethod(0, 0.5, 2.0);   //turn robot to the left
+            driveMethod(0.5, 0.5, 3.0); //drive robot straight (enough to clear the center mineral so that it can turn and drive without hitting the center mineral)
+            driveMethod(0.5, 0, 2.0);   //turn robot right
+            driveMethod(0.5, 0.5, 3.0); //drive robot straight into crater
+
+        } else {
+            //drive robot straight into crater
+            driveMethod(0.5, 0.5, 4.0); //drive robot straight into crater
+
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
