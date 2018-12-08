@@ -27,6 +27,8 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 that name should be the same for the package name and the file name under java that's usually gray
 */
 
+// written: Ava Paikeday last edited: 12/7/18
+
 /**
  * This 2018-2019 OpMode illustrates the basics of using the TensorFlow Object Detection API to
  * determine the position of the gold and silver minerals.
@@ -46,6 +48,7 @@ public class DetectGold extends LinearOpMode {
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
     private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
     public static String goldPosition;
+
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -83,6 +86,8 @@ public class DetectGold extends LinearOpMode {
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
         initVuforia();
+        robot.init(hardwareMap);
+
 
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
@@ -125,13 +130,24 @@ public class DetectGold extends LinearOpMode {
                             if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
                                 if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                                     telemetry.addData("Gold Mineral Position", "Left");
-                                    goldPosition = "left";
+                                    //goldPosition = "left";
+                                    driveMethod(0.5, 0, 0.7);     //turn robot to the right
+                                    driveMethod(0.5, 0.5, 2.0); //drive robot straight (enough to clear the center mineral so that it can turn and drive without hitting the center mineral)
+                                    driveMethod(0, 0.5, 0.5);   //turn robot left
+                                    driveMethod(0.5, 0.5, 1.7); //drive robot straight into crater
                                 } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
                                     telemetry.addData("Gold Mineral Position", "Right");
-                                    goldPosition = "right";
+                                  //  goldPosition = "right";
+                                    driveMethod(0, 0.5, 0.5);   //turn robot to the left
+                                    driveMethod(0.5, 0.5, 2.0); //drive robot straight (enough to clear the center mineral so that it can turn and drive without hitting the center mineral)
+                                    driveMethod(0.5, 0, 0.5);   //turn robot right
+                                    driveMethod(0.5, 0.5, 1.7); //drive robot straight into crater
+
                                 } else {
                                     telemetry.addData("Gold Mineral Position", "Center");
                                     goldPosition = "center";
+                                    driveMethod(0.5, 0.5, 2.5); //drive robot straight into crater
+
                                 }
                             }
                         }
@@ -215,19 +231,19 @@ public class DetectGold extends LinearOpMode {
         //   public void runOpMode () {
 
         // Initializes the motors declared in hardwareMap or HardwareMap class.
-        robot.init(hardwareMap);
+      // robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Ready to run");    //
-        telemetry.update();
+     //   telemetry.addData("Status", "Ready to run");    //
+      //  telemetry.update();
 
 
         // This method is used for setting the motors to a specified speed and for a set amount of seconds
 
 
-        waitForStart();
+       // waitForStart();
 
-
+/*
         if (goldPosition == "left") {
             driveMethod(0.5, 0, 2.0);     //turn robot to the right
             driveMethod(0.5, 0.5, 3.0); //drive robot straight (enough to clear the center mineral so that it can turn and drive without hitting the center mineral)
@@ -245,6 +261,7 @@ public class DetectGold extends LinearOpMode {
             driveMethod(0.5, 0.5, 4.0); //drive robot straight into crater
 
         }
+        */
     }
 }
 
@@ -257,3 +274,10 @@ public class DetectGold extends LinearOpMode {
 
 
 
+
+
+   
+
+          
+                  
+    
